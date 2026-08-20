@@ -21,10 +21,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gowinston-ai/node-ai-detector.git"
+    "url": "git+https://github.com/gowinston-ai/ai-detector-node.git"
   },
   "bugs": {
-    "url": "https://github.com/gowinston-ai/node-ai-detector/issues"
+    "url": "https://github.com/gowinston-ai/ai-detector-node/issues"
   },
   "homepage": "https://docs.gowinston.ai",
   "publishConfig": {
