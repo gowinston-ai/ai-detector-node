@@ -15,7 +15,7 @@ npm install @winston-ai/ai-detector
 
 ## Authentication
 
-All endpoints are authenticated with a Bearer token. Create an account on the [Winston AI developer dashboard](https://dev.gowinston.ai) to generate an API key.You'll get 2000 free credits to start, no credit card required.
+All endpoints are authenticated with a Bearer token. Create an account on the [Winston AI developer dashboard](https://dev.gowinston.ai) to generate an API key. You'll get 2000 free credits to start, no credit card required.
 
 ## Quick start
 
