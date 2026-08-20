@@ -1,0 +1,36 @@
+{
+  "name": "@winston-ai/ai-detector",
+  "version": "1.0.0",
+  "description": "Official Node.js SDK for the Winston AI detection API. Analyze text for AI-generated content with a simple, typed interface.",
+  "main": "index.js",
+  "type": "commonjs",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [
+    "winston-ai",
+    "ai-detector",
+    "ai-detection",
+    "ai-text-detection",
+    "ai-content-detection",
+    "ai-image-detection",
+    "fact-checker",
+    "plagiarism-checker",
+    "text-compare"
+  ],
+  "author": "Winston AI",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@babel/core": "^7.29.7",
+    "@babel/preset-env": "^7.29.7",
+    "@babel/preset-typescript": "^7.29.7",
+    "@types/node": "^26.2.0",
+    "babel-jest": "^30.4.1",
+    "dotenv": "^17.4.2",
+    "jest": "^30.4.2",
+    "typescript": "^7.0.2"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
