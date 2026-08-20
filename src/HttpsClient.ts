@@ -32,7 +32,7 @@ export class HttpsClient {
 
         const maxRetriesToUse = this.maxRetries > MAXIMIUM_NUMBER_FOR_RETRIES ? MAXIMIUM_NUMBER_FOR_RETRIES : this.maxRetries;
 
-        for (let attempt = 0; attempt < maxRetriesToUse; attempt++) {
+        for (let attempt = 0; attempt <= maxRetriesToUse; attempt++) {
             const response = await this.tryFetch(path, body, attempt, maxRetriesToUse);
 
             if (response === null) {
@@ -51,11 +51,11 @@ export class HttpsClient {
             throw WinstonAIError.from(await this.readError(response));
         }
 
-        // If we've retried the maximum number of times and still haven't received a response, throw an error.
+        // Unreachable: the last attempt always returns or throws above. Kept as a safety net.
         throw new WinstonAIError({
             status: 500,
             error: "MAXIMUM_RETRIES_EXCEEDED",
-            description: "The API returned a non-JSON response",
+            description: "The request failed after the maximum number of retries",
         });
     }
 

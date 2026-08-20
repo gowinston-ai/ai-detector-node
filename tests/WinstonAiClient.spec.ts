@@ -1,5 +1,4 @@
-import { AdvancedAiImageDetectionResponse, AiImageDetectionResponse, AiTextDetectionResponse, FactCheckResponse, PlagiarismResponse, TextCompareResponse } from "../src/type";
-import { WinstonAIClient } from "../src/WinstonAIClient";
+import { WinstonAIClient, AdvancedAiImageDetectionResponse, AiImageDetectionResponse, AiTextDetectionResponse, FactCheckResponse, PlagiarismResponse, TextCompareResponse } from "../src/index";
 
 require('dotenv').config();
 
