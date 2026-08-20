@@ -1,12 +1,34 @@
 {
   "name": "@winston-ai/ai-detector",
   "version": "1.0.0",
-  "description": "Official Node.js SDK for the Winston AI detection API. Analyze text for AI-generated content with a simple, typed interface.",
-  "main": "index.js",
+  "description": "Official Node.js SDK for the Winston AI API. Detect AI-generated text with a simple, fully typed interface.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "type": "commonjs",
   "scripts": {
     "test": "jest",
-    "build": "tsc"
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gowinston-ai/node-ai-detector.git"
+  },
+  "bugs": {
+    "url": "https://github.com/gowinston-ai/node-ai-detector/issues"
+  },
+  "homepage": "https://docs.gowinston.ai",
+  "publishConfig": {
+    "access": "public"
   },
   "keywords": [
     "winston-ai",
