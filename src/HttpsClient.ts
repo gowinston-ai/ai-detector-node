@@ -2,7 +2,7 @@ import { GlobalEndpointErrorResponse } from "./type";
 import { WinstonAIError, WinstonConnectionError } from "./WinstonAIError";
 
 export interface HttpsClientOptions {
-    /** Number of times a transient failure is retried before throwing. Default: 2. */
+    /** Number of times a transient failure is retried before throwing. Default: 1. Maximum: 5. */
     maxRetries?: number;
     /** Base delay in ms for exponential backoff between retries. Default: 500. */
     retryBaseDelayMs?: number;
@@ -11,6 +11,7 @@ export interface HttpsClientOptions {
 /** Statuses that are safe to retry: request timeout, conflict, rate limit, and server errors. */
 const RETRYABLE_STATUS_CODES = new Set([408, 409, 429, 500, 502, 503, 504]);
 const DEFAULT_MAX_RETRIES = 1;
+const MAXIMIUM_NUMBER_FOR_RETRIES = 5;
 const DEFAULT_RETRY_BASE_DELAY_MS = 500;
 
 export class HttpsClient {
@@ -22,15 +23,18 @@ export class HttpsClient {
     constructor(baseUrl: string, apiKey: string, options: HttpsClientOptions = {}) {
         this.baseUrl = baseUrl;
         this.apiKey = apiKey;
+
         this.maxRetries = options.maxRetries ?? DEFAULT_MAX_RETRIES;
         this.retryBaseDelayMs = options.retryBaseDelayMs ?? DEFAULT_RETRY_BASE_DELAY_MS;
     }
 
     public async post<T>(path: string, body: unknown): Promise<T> {
-        for (let attempt = 0; attempt < this.maxRetries; attempt++) {
-            const response = await this.tryFetch(path, body, attempt);
 
-            // A null response means a network failure was thrown and retried.
+        const maxRetriesToUse = this.maxRetries > MAXIMIUM_NUMBER_FOR_RETRIES ? MAXIMIUM_NUMBER_FOR_RETRIES : this.maxRetries;
+
+        for (let attempt = 0; attempt < maxRetriesToUse; attempt++) {
+            const response = await this.tryFetch(path, body, attempt, maxRetriesToUse);
+
             if (response === null) {
                 continue;
             }
@@ -39,8 +43,8 @@ export class HttpsClient {
                 return this.parseJson<T>(response);
             }
 
-            if (this.shouldRetry(response.status, attempt)) {
-                await this.backoff(attempt);
+            if (this.shouldRetry(response.status, attempt, maxRetriesToUse)) {
+                await this.waitBeforeNextRetry(attempt);
                 continue;
             }
 
@@ -55,19 +59,20 @@ export class HttpsClient {
         });
     }
 
-    private async tryFetch(path: string, body: unknown, attempt: number): Promise<Response | null> {
+    private async tryFetch(path: string, body: unknown, attempt: number, maxRetriesToUse: number): Promise<Response | null> {
         try {
             return await fetch(`${this.baseUrl}${path}`, {
                 method: "POST",
                 body: JSON.stringify(body),
                 headers: {
                     "Content-Type": "application/json",
+                    "Accept": "application/json",
                     Authorization: `Bearer ${this.apiKey}`,
                 },
             });
         } catch (error) {
-            if (attempt < this.maxRetries) {
-                await this.backoff(attempt);
+            if (attempt < maxRetriesToUse) {
+                await this.waitBeforeNextRetry(attempt);
                 return null;
             }
 
@@ -106,11 +111,11 @@ export class HttpsClient {
         };
     }
 
-    private shouldRetry(status: number, attempt: number): boolean {
-        return attempt < this.maxRetries && RETRYABLE_STATUS_CODES.has(status);
+    private shouldRetry(status: number, attempt: number, maxRetriesToUse: number): boolean {
+        return attempt < maxRetriesToUse && RETRYABLE_STATUS_CODES.has(status);
     }
 
-    private backoff(attempt: number): Promise<void> {
+    private waitBeforeNextRetry(attempt: number): Promise<void> {
         const exponential = this.retryBaseDelayMs * 2 ** attempt;
         const jitter = Math.random() * this.retryBaseDelayMs;
         return new Promise((resolve) => setTimeout(resolve, exponential + jitter));

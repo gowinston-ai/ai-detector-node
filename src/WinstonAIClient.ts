@@ -11,6 +11,8 @@ import {
     PlagiarismResponse,
     FactCheckRequest,
     FactCheckResponse,
+    TextCompareResponse,
+    TextCompareRequest,
 } from "./type";
 
 interface IClient {
@@ -19,6 +21,7 @@ interface IClient {
     detectAdvancedImage(request: AdvancedAiImageDetectionRequest): Promise<AdvancedAiImageDetectionResponse>;
     checkPlagiarism(request: PlagiarismRequest): Promise<PlagiarismResponse>;
     checkFact(request: FactCheckRequest): Promise<FactCheckResponse>;
+    compareText(request: TextCompareRequest): Promise<TextCompareResponse>;
 }
 
 const WINSTON_AI_BASE_API_URL = "https://api.gowinston.ai/v2";
@@ -44,7 +47,7 @@ class WinstonAIClient implements IClient {
     }
 
     constructor(apiKey: string, options: HttpsClientOptions = {}) {
-        if (!apiKey) {
+        if (!apiKey || apiKey.trim() === "" || apiKey.trim() === "undefined") {
             throw new WinstonAuthenticationError({
                 status: 401,
                 error: "UNAUTHORIZED",
@@ -122,6 +125,19 @@ class WinstonAIClient implements IClient {
 
         return this.httpsClient.post<FactCheckResponse>(this.routes.FACT_CHECKER, request);
     }
+
+    public async compareText(request: TextCompareRequest): Promise<TextCompareResponse> {
+        if (!request.first_text && !request.second_text) {
+            throw new WinstonBadRequestError({
+                status: 400,
+                error: "BAD_REQUEST",
+                description: "Provide first and second text",
+            });
+        }
+        
+        return this.httpsClient.post<TextCompareResponse>(this.routes.TEXT_COMPARE, request);
+    }
+
 }
 
 export {
