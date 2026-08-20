@@ -226,6 +226,8 @@ import type {
 - [Developer dashboard](https://dev.gowinston.ai)
 - [Interpreting AI detection scores](https://gowinston.ai/interpreting-our-ai-detection-scores/)
 
+To see what types of content you can scan with Winston, [click here](https://help.gowinston.ai/understanding-winston-ai/what-types-of-content-can-i-scan-with-winston-ai)
+
 ## License
 
 Apache-2.0
