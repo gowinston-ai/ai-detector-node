@@ -1,6 +1,6 @@
 {
   "name": "@winston-ai/ai-detector",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Official Node.js SDK for the Winston AI API. Detect AI-generated text with a simple, fully typed interface.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
