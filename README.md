@@ -23,11 +23,20 @@ All endpoints are authenticated with a Bearer token. Create an account on the [W
 
 ## Quick start
 
+We recommend storing your API key in an environment variable rather than hardcoding it.
+
+```bash
+WINSTON_AI_API_KEY="your-api-key"
+```
+
+Then create a client and make your first request:
+
 ```ts
 import { WinstonAIClient } from "@winston-ai/ai-detector";
 
-const winstonAIKey = "your-winston-ai-api-key";
-const client = new WinstonAIClient(winstonAIKey);
+const winstonApiKey = process.env.WINSTON_AI_API_KEY!;
+
+const client = new WinstonAIClient(winstonApiKey);
 
 const result = await client.detectText({
   text: "The text you want to analyze. Provide at least 300 characters for reliable results...",
@@ -45,7 +54,7 @@ const { WinstonAIClient } = require("@winston-ai/ai-detector");
 ## Client configuration
 
 ```ts
-const client = new WinstonAIClient(apiKey, {
+const client = new WinstonAIClient(winstonApiKey, {
   maxRetries: 1,        // retries after the first attempt (default: 1, max: 5)
   retryBaseDelayMs: 500, // base delay for exponential backoff (default: 500)
 });
